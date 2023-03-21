@@ -18,14 +18,14 @@
         <div class="row">
             <div class="col-12 col-lg-8 pe-lg-2 mb-4 mb-lg-0">
                 <div class="row mb-3">
-                    <img class="img-fluid mb-2" alt="Latest generated randemon map" id="latest"/>
+                    <img onclick=open_in_new_tab() class="img-fluid mb-2" alt="Latest generated randemon map" id="latest"/>
                     <div id="latest-buttons">
                         <div class="d-grid mb-2">
-                            <button class="btn btn-primary disabled">
+                            <a class="btn btn-primary" id="downloadBtn" download="randemonMap.png">
                                 <img src="assets/bootstrap-icons/download.svg" alt="Bootstrap"
                                      width="12" height="12">
                                 Save
-                            </button>
+                            </a>
                         </div>
                         <div class="row">
                             <div class="col-3 pe-1">
@@ -39,21 +39,21 @@
                             </div>
                             <div class="col-3 px-1">
                                 <div class="d-grid" style="height:100%">
-                                    <button class="btn btn-outline-secondary disabled">
+                                    <button class="btn btn-outline-secondary disabled" id="copySeed">
                                         Copy seed
                                     </button>
                                 </div>
                             </div>
                             <div class="col-3 px-1">
                                 <div class="d-grid" style="height:100%">
-                                    <button onclick=open_in_new_tab() class="btn btn-outline-secondary">
+                                    <button onclick=open_in_new_tab() class="btn btn-outline-secondary" id="openInNewTab">
                                         Open in new tab
                                     </button>
                                 </div>
                             </div>
                             <div class="col-3 ps-1">
                                 <div class="d-grid" style="height:100%">
-                                    <button class="btn btn-outline-warning disabled">
+                                    <button class="btn btn-outline-warning disabled" id="reload">
                                         Reload
                                     </button>
                                 </div>
@@ -62,7 +62,7 @@
                     </div>
                 </div>
                 <div class="pt-3 border-top">
-                    <form>
+                    <div class="inputs">
                         <div class="mb-3">
                             <label for="seed" class="form-label">Seed</label>
                             <input type="text" class="form-control text-body bg-body" id="seed"
@@ -72,7 +72,7 @@
                             <input type="checkbox" class="form-check-input" id="islandMode" checked disabled>
                             <label class="form-check-label text-body" for="islandMode">Island</label>
                         </div>
-                    </form>
+                    </div>
                     <div class="d-grid">
                         <button onclick=create_new_map() class="btn btn-primary">
                             <img src="assets/bootstrap-icons/terminal.svg" alt="Bootstrap"

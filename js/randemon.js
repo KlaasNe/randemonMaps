@@ -1,24 +1,31 @@
 const imageUrl = "http://127.0.0.1:8000";
-let loadingImage = true;
 
 addEventListener("DOMContentLoaded", () => {
     set_latest_map();
 });
 
 async function fetch_map() {
-    loadingImage = true;
-    return fetch(imageUrl)
+    let finalUrl = imageUrl;
+    const seed = document.getElementById("seed").value;
+    if (seed) {
+        finalUrl += "?seed=" + seed;
+    }
+    disable_buttons();
+    return fetch(finalUrl)
         .then(response => response.blob())
         .then(imageBlob => URL.createObjectURL(imageBlob));
 }
 
 function set_latest_map() {
     const latest = document.getElementById("latest");
+    const downloadBtn = document.getElementById("downloadBtn");
     fetch_map()
         .then(map => latest.src = map)
         .then(() => {
             latest.alt = "Latest generated randemon map";
-            loadingImage = false;
+            downloadBtn.href = latest.src;
+            // downloadBtn.download = latest.src;
+            enable_buttons();
         });
 }
 
@@ -30,9 +37,25 @@ function create_new_map() {
 }
 
 function open_in_new_tab() {
-    if (!loadingImage) {
-        const latest = document.getElementById('latest');
-        const url = latest.getAttribute('src');
-        window.open(url, '_blank');
-    }
+    const latest = document.getElementById('latest');
+    const url = latest.getAttribute('src');
+    window.open(url, '_blank');
+}
+
+function disable_buttons() {
+    const downloadBtn = document.getElementById("downloadBtn");
+    const copySeedBtn = document.getElementById("copySeed");
+    const openInNewTabBtn = document.getElementById("openInNewTab");
+    const reloadBtn = document.getElementById("reload");
+    downloadBtn.classList.add("disabled");
+    openInNewTabBtn.classList.add("disabled");
+}
+
+function enable_buttons() {
+    const downloadBtn = document.getElementById("downloadBtn");
+    const copySeedBtn = document.getElementById("copySeed");
+    const openInNewTabBtn = document.getElementById("openInNewTab");
+    const reloadBtn = document.getElementById("reload");
+    downloadBtn.classList.remove("disabled");
+    openInNewTabBtn.classList.remove("disabled");
 }
