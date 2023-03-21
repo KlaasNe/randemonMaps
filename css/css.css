@@ -1,0 +1,8 @@
+@font-face {
+    font-family: FOTNewRodin;
+    src: url("../assets/fonts/FOTNewRodin Pro M.otf") format("opentype");
+}
+
+body {
+  font-family: 'FOTNewRodin', Fallback, sans-serif;
+}

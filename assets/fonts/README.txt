@@ -1,0 +1,1 @@
+This font was downloaded from https://www.cufonfonts.com/font/fot-newrodin-pro
