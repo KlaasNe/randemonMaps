@@ -18,3 +18,11 @@ input[type=number] {
 body {
   font-family: 'FOTNewRodin', Fallback, sans-serif;
 }
+
+h5 {
+    font-size: 18px;
+}
+
+small {
+    font-size: 12px;
+}

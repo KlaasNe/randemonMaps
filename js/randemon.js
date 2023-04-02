@@ -16,7 +16,7 @@ class RandemonMap {
      */
     timeCreatedFormatted() {
         const d = this.timeCreated;
-        return `${d.getDay()}-${d.getMonth()}-${d.getFullYear()}_${d.getHours()}-${d.getMinutes()}-${d.getSeconds()}`;
+        return `${d.getDate()}-${d.getMonth() + 1}-${d.getFullYear()}_${d.getHours()}-${d.getMinutes()}-${d.getSeconds()}`;
     }
 
     getFullName() {
@@ -26,9 +26,9 @@ class RandemonMap {
 
 
 const imageUrl = "http://127.0.0.1:8000";
+const MAX_MAPS = 5;
 let previousMaps = [];
 let keepMaps = [];
-const MAX_MAPS = 5;
 
 /**
  * Init first map when loading site.
@@ -93,8 +93,13 @@ function disable_buttons() {
     const copySeedBtn = document.getElementById("copySeed");
     const openInNewTabBtn = document.getElementById("openInNewTab");
     const reloadBtn = document.getElementById("reload");
+    const latest = document.getElementById("latest");
+    const loading = document.getElementById("loading-img");
     downloadBtn.classList.add("disabled");
     openInNewTabBtn.classList.add("disabled");
+    copySeedBtn.classList.add("disabled");
+    latest.hidden = true;
+    loading.hidden = false;
 }
 
 /**
@@ -105,8 +110,13 @@ function enable_buttons() {
     const copySeedBtn = document.getElementById("copySeed");
     const openInNewTabBtn = document.getElementById("openInNewTab");
     const reloadBtn = document.getElementById("reload");
+    const latest = document.getElementById("latest");
+    const loading = document.getElementById("loading-img");
     downloadBtn.classList.remove("disabled");
     openInNewTabBtn.classList.remove("disabled");
+    copySeedBtn.classList.remove("disabled");
+    latest.hidden = false;
+    loading.hidden = true;
 }
 
 /**
@@ -125,7 +135,12 @@ function copy_seed_to_clipboard() {
     copy_to_clipboard(seed);
 }
 
-function create_cards() {
+function delete_map_from_previous(index) {
+    previousMaps.splice(index, 1);
+    update_cards_previous_maps();
+}
+
+function update_cards_previous_maps() {
     clear_previous_maps();
     const previous = document.getElementById("previous-maps");
     for (let i = 1; i < previousMaps.length; i++) {
@@ -138,30 +153,36 @@ function clear_previous_maps() {
     previous.innerHTML = '';
 }
 
+function update_previous_maps(map) {
+    previousMaps.unshift(map);
+    if (previousMaps.length > MAX_MAPS + 1) previousMaps.pop();
+    update_cards_previous_maps();
+}
+
 function create_card_previous(map, index) {
     return `<card>
                 <div class="card m-2">
                     <img src=${map.imageURL} onclick=open_in_new_tab(${index}) class="card-img-top" alt="...">
                     <div class="card-body">
                         <h5 class="card-title">${map.seed}</h5>
-                        <p class="card-text">
+                        <small class="card-text">
                             ${map.timeCreatedFormatted()}
-                        </p>
+                        </small>
                         <div class="row my-2">
-                            <div class="col-xxl-7 col-lg-6 col-8 ps-2 pe-1">
+                            <div class="col-9 ps-2 pe-1">
                                 <div class="d-grid">
                                     <a class="btn btn-primary" download=${map.getFullName()}>
                                         <img alt="Bootstrap" src="assets/bootstrap-icons/download.svg"
-                                             width="12" height="12">
+                                             width="16" height="16">
                                         Save
                                     </a>
                                 </div>
                             </div>
-                            <div class="col-xxl-5 col-lg-6 col-4 ps-1 pe-2">
+                            <div class="col-3 ps-1 pe-2">
                                 <div class="d-grid">
-                                    <button class="btn btn-danger disabled">
+                                    <button onclick=delete_map_from_previous(${index}) class="btn btn-danger">
                                         <img src="assets/bootstrap-icons/trash.svg" alt="Bootstrap"
-                                             width="12" height="12">
+                                             width="16" height="16">
                                     </button>
                                 </div>
                             </div>
@@ -194,10 +215,4 @@ function create_card_previous(map, index) {
                     </div>
                 </div>
             </card>`;
-}
-
-function update_previous_maps(map) {
-    previousMaps.unshift(map);
-    if (previousMaps.length > MAX_MAPS + 1) previousMaps.pop();
-    create_cards();
 }
