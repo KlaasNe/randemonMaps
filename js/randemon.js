@@ -112,8 +112,8 @@ function enable_buttons() {
 /**
  * Open the latest map image in a new tab.
  */
-function open_in_new_tab(url=previousMaps[0].imageURL) {
-    window.open(url, '_blank');
+function open_in_new_tab(index=0) {
+    window.open(previousMaps[index].imageURL, '_blank');
 }
 
 function copy_to_clipboard(text) {
@@ -138,10 +138,10 @@ function clear_previous_maps() {
     previous.innerHTML = '';
 }
 
-function create_card_previous(map) {
+function create_card_previous(map, index) {
     return `<card>
                 <div class="card m-2">
-                    <img src=${map.imageURL} onclick=open_in_new_tab() class="card-img-top" alt="...">
+                    <img src=${map.imageURL} onclick=open_in_new_tab(${index}) class="card-img-top" alt="...">
                     <div class="card-body">
                         <h5 class="card-title">${map.seed}</h5>
                         <p class="card-text">
