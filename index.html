@@ -13,12 +13,14 @@
 <main>
     <div data-bs-theme="dark" class="container text-body bg-body">
         <div class="text-center p-2 mb-1">
-            <h1 class="m-0"><span class="text-danger"><strong>Rand</strong></span><span class="text-light"><strong>emon</strong></span></h1>
+            <h1 class="m-0"><span class="text-danger"><strong>Rand</strong></span><span
+                    class="text-light"><strong>emon</strong></span></h1>
         </div>
         <div class="row">
             <div class="col-12 col-lg-8 pe-lg-2 mb-4 mb-lg-0">
                 <div class="row mb-3">
-                    <img onclick=open_in_new_tab() class="img-fluid mb-2" alt="Latest generated randemon map" id="latest"/>
+                    <img onclick=open_in_new_tab() class="img-fluid mb-2" alt="Latest generated randemon map"
+                         id="latest"/>
                     <div id="latest-buttons">
                         <div class="d-grid mb-2">
                             <a class="btn btn-primary" id="downloadBtn" download="randemonMap.png">
@@ -39,14 +41,16 @@
                             </div>
                             <div class="col-3 px-1">
                                 <div class="d-grid" style="height:100%">
-                                    <button onclick=copy_seed_to_clipboard() class="btn btn-outline-secondary" id="copySeed">
+                                    <button onclick=copy_seed_to_clipboard() class="btn btn-outline-secondary"
+                                            id="copySeed">
                                         Copy seed
                                     </button>
                                 </div>
                             </div>
                             <div class="col-3 px-1">
                                 <div class="d-grid" style="height:100%">
-                                    <button onclick=open_in_new_tab() class="btn btn-outline-secondary" id="openInNewTab">
+                                    <button onclick=open_in_new_tab() class="btn btn-outline-secondary"
+                                            id="openInNewTab">
                                         Open in new tab
                                     </button>
                                 </div>
@@ -65,8 +69,9 @@
                     <div class="inputs">
                         <div class="mb-3">
                             <label for="seed" class="form-label">Seed</label>
-                            <input type="number" class="form-control text-body bg-body" id="seed" min="0" max="9223372036854775807"
-                                   aria-describedby="The seed used for randomization" autocomplete="false" >
+                            <input type="number" class="form-control text-body bg-body" id="seed" min="0"
+                                   max="9223372036854775807"
+                                   aria-describedby="The seed used for randomization" autocomplete="false">
                         </div>
                         <div class="mb-3 form-check">
                             <input type="checkbox" class="form-check-input" id="islandMode" checked disabled>
@@ -88,7 +93,9 @@
                 <div class="sticky-lg-top">
                     <div class="text-center"><h3 class="m-0">Previous maps</h3></div>
                     <div class="mt-3 border rounded center-text">
-                        <div class="navbar-nav navbar-nav-scroll d-flex flex-column" style="--bs-scroll-height: 100%;" id="previous-maps"></div>
+                            <div class="navbar-nav navbar-nav-scroll" style="--bs-scroll-height: 100%;">
+                                <div class="d-lg-block d-flex flex-lg-column flex-row flex-nowrap" id="previous-maps"></div>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -16,12 +16,18 @@ class RandemonMap {
      */
     timeCreatedFormatted() {
         const d = this.timeCreated;
-        return `${d.getDay()}-${d.getMonth()}-${d.getFullYear()}_${d.getHours()}-${d.getMinutes()}-${d.getSeconds()}`
+        return `${d.getDay()}-${d.getMonth()}-${d.getFullYear()}_${d.getHours()}-${d.getMinutes()}-${d.getSeconds()}`;
+    }
+
+    getFullName() {
+        return `${this.timeCreatedFormatted()}_${this.seed}`;
     }
 }
 
+
 const imageUrl = "http://127.0.0.1:8000";
-let maps = [];
+let previousMaps = [];
+let keepMaps = [];
 const MAX_MAPS = 5;
 
 /**
@@ -29,8 +35,6 @@ const MAX_MAPS = 5;
  */
 addEventListener("DOMContentLoaded", () => {
     set_latest_map();
-    const previous = document.getElementById("previous-maps");
-    previous.innerHTML = create_card() + create_card();
 });
 
 /**
@@ -46,6 +50,16 @@ async function fetch_map(seed) {
         .then(response => response.blob())
         .then(blob => URL.createObjectURL(blob))
         .catch(ignored => window.alert('Error fetching image'));
+}
+
+/**
+ * Create a new map and display it when ready.
+ */
+function create_new_map() {
+    const latest = document.getElementById("latest");
+    latest.src = "";
+    latest.alt = "Loading new map. This might take a few seconds.";
+    set_latest_map();
 }
 
 /**
@@ -69,16 +83,6 @@ function set_latest_map() {
                 enable_buttons();
             }
         });
-}
-
-/**
- * Create a new map and display it when ready.
- */
-function create_new_map() {
-    const latest = document.getElementById("latest");
-    latest.src = "";
-    latest.alt = "Loading new map. This might take a few seconds.";
-    set_latest_map();
 }
 
 /**
@@ -108,38 +112,52 @@ function enable_buttons() {
 /**
  * Open the latest map image in a new tab.
  */
-function open_in_new_tab() {
-    const latest = document.getElementById('latest');
-    const url = latest.getAttribute('src');
+function open_in_new_tab(url=previousMaps[0].imageURL) {
     window.open(url, '_blank');
 }
 
-function copy_seed_to_clipboard() {
-    const seed = maps[0].seed.toString();
-    navigator.clipboard.writeText(seed);
+function copy_to_clipboard(text) {
+    navigator.clipboard.writeText(text);
 }
 
-function create_card() {
+function copy_seed_to_clipboard() {
+    const seed = previousMaps[0].seed.toString();
+    copy_to_clipboard(seed);
+}
+
+function create_cards() {
+    clear_previous_maps();
+    const previous = document.getElementById("previous-maps");
+    for (let i = 1; i < previousMaps.length; i++) {
+        previous.innerHTML += create_card_previous(previousMaps[i], i);
+    }
+}
+
+function clear_previous_maps() {
+    const previous = document.getElementById("previous-maps");
+    previous.innerHTML = '';
+}
+
+function create_card_previous(map) {
     return `<card>
                 <div class="card m-2">
-                    <img src="assets/placeholder-img/2023-02-05_23-52-19_8397485239334123638.png"
-                         class="card-img-top" alt="...">
+                    <img src=${map.imageURL} onclick=open_in_new_tab() class="card-img-top" alt="...">
                     <div class="card-body">
-                        <h5 class="card-title">7117294270402732484</h5>
+                        <h5 class="card-title">${map.seed}</h5>
                         <p class="card-text">
-                            2023-01-25_19-47-51_7117294270402732484.png
+                            ${map.timeCreatedFormatted()}
                         </p>
-                        <div class="row mb-2">
-                            <div class="col-xxl-7 col-lg-6 col-sm-8 ps-2 pe-1">
+                        <div class="row my-2">
+                            <div class="col-xxl-7 col-lg-6 col-8 ps-2 pe-1">
                                 <div class="d-grid">
-                                    <button class="btn btn-primary">
-                                        <img src="assets/bootstrap-icons/download.svg" alt="Bootstrap"
+                                    <a class="btn btn-primary" download=${map.getFullName()}>
+                                        <img alt="Bootstrap" src="assets/bootstrap-icons/download.svg"
                                              width="12" height="12">
                                         Save
-                                    </button>
+                                    </a>
                                 </div>
                             </div>
-                            <div class="col-xxl-5 col-lg-6 col-sm-4 ps-1 pe-2">
+                            <div class="col-xxl-5 col-lg-6 col-4 ps-1 pe-2">
                                 <div class="d-grid">
                                     <button class="btn btn-danger disabled">
                                         <img src="assets/bootstrap-icons/trash.svg" alt="Bootstrap"
@@ -149,7 +167,7 @@ function create_card() {
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-xxl-4 col-lg-12 col-4 ps-xxl-2 pe-xxl-1 ps-2 pe-1 my-xxl-0 my-1">
+                            <div class="col-xxl-4 col-lg-12 col-4 ps-xxl-2 pe-xxl-1 px-lg-2 ps-2 pe-1 my-xxl-0 my-1">
                                 <div class="d-grid">
                                     <button class="btn btn-outline-primary disabled">
                                         <!--                                <img src="assets/bootstrap-icons/plus-square.svg" style="color: white;" alt="Bootstrap"-->
@@ -158,14 +176,14 @@ function create_card() {
                                     </button>
                                 </div>
                             </div>
-                            <div class="col-xxl-4 col-lg-12 col-4 px-xxl-1 px-1 my-xxl-0 my-1">
+                            <div class="col-xxl-4 col-lg-12 col-4 px-xxl-1 px-lg-2 px-1 my-xxl-0 my-1">
                                 <div class="d-grid">
-                                    <button class="btn btn-outline-secondary">
+                                    <button onclick=copy_to_clipboard(${map.seed}) class="btn btn-outline-secondary">
                                         Seed
                                     </button>
                                 </div>
                             </div>
-                            <div class="col-xxl-4 col-lg-12 col-4 ps-xxl-1 pe-xxl-2 ps-1 pe-2 my-xxl-0 my-1">
+                            <div class="col-xxl-4 col-lg-12 col-4 ps-xxl-1 pe-xxl-2 px-lg-2 ps-1 pe-2 my-xxl-0 my-1">
                                 <div class="d-grid">
                                     <button class="btn btn-outline-warning disabled">
                                         Reload
@@ -175,10 +193,11 @@ function create_card() {
                         </div>
                     </div>
                 </div>
-            </card>`
+            </card>`;
 }
 
 function update_previous_maps(map) {
-    maps.unshift(map);
-    if (maps.length > MAX_MAPS + 1) maps.pop();
+    previousMaps.unshift(map);
+    if (previousMaps.length > MAX_MAPS + 1) previousMaps.pop();
+    create_cards();
 }
