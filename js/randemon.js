@@ -93,12 +93,14 @@ function set_latest_map() {
  */
 function disable_buttons() {
     const downloadBtn = document.getElementById("downloadBtn");
+    const keepBtn = document.getElementById("keepMap");
     const copySeedBtn = document.getElementById("copySeed");
     const openInNewTabBtn = document.getElementById("openInNewTab");
     const reloadBtn = document.getElementById("reload");
     const latest = document.getElementById("latest");
     const loading = document.getElementById("loading-img");
     downloadBtn.classList.add("disabled");
+    keepBtn.classList.add("disabled");
     openInNewTabBtn.classList.add("disabled");
     copySeedBtn.classList.add("disabled");
     latest.hidden = true;
@@ -110,11 +112,13 @@ function disable_buttons() {
  */
 function enable_buttons() {
     const downloadBtn = document.getElementById("downloadBtn");
+    const keepBtn = document.getElementById("keepMap");
     const copySeedBtn = document.getElementById("copySeed");
     const openInNewTabBtn = document.getElementById("openInNewTab");
     const reloadBtn = document.getElementById("reload");
     const latest = document.getElementById("latest");
     downloadBtn.classList.remove("disabled");
+    keepBtn.classList.remove("disabled");
     openInNewTabBtn.classList.remove("disabled");
     copySeedBtn.classList.remove("disabled");
     latest.hidden = false;
@@ -129,8 +133,9 @@ function hide_loading_spinner() {
 /**
  * Open the latest map image in a new tab.
  */
-function open_in_new_tab(index=0) {
-    window.open(previousMaps[index].imageURL, '_blank');
+function open_in_new_tab(imgURL) {
+    if (!imgURL) imgURL = previousMaps[0].imageURL;
+    window.open(imgURL, '_blank');
 }
 
 function copy_to_clipboard(text) {
@@ -156,6 +161,8 @@ function update_cards_previous_maps() {
 }
 
 function keep_latest_map() {
+    const keepBtn = document.getElementById("keepMap");
+    keepBtn.classList.add("disabled");
     keep_map(previousMaps[0]);
 }
 
@@ -169,7 +176,7 @@ function update_cards_keep_maps() {
     clear_keep_maps();
     const keep = document.getElementById("keep-maps");
     for (let i = 0; i < keepMaps.length; i++) {
-        keep.innerHTML += create_card(keepMaps[i], i);
+        keep.innerHTML += create_card_keep(keepMaps[i], i);
     }
 }
 
@@ -192,7 +199,7 @@ function update_previous_maps(map) {
 function create_card(map, index) {
     return `<card>
                 <div class="card mt-2 me-lg-0 me-2">
-                    <img src=${map.imageURL} onclick=open_in_new_tab(${index}) class="card-img-top" alt="...">
+                    <img src=${map.imageURL} onclick=open_in_new_tab("${map.imageURL}") class="card-img-top" alt="...">
                     <div class="card-body">
                         <h5 class="card-title">${map.seed}</h5>
                         <small class="card-text">
@@ -201,7 +208,7 @@ function create_card(map, index) {
                         <div class="row my-2">
                             <div class="col-9 ps-2 pe-1">
                                 <div class="d-grid">
-                                    <a class="btn btn-primary" download=${map.getFullName()}>
+                                    <a class="btn btn-primary" download=${map.getFullName()} href=${map.imageURL}>
                                         <img alt="Bootstrap" src="assets/bootstrap-icons/download.svg"
                                              width="16" height="16">
                                         Save
@@ -235,6 +242,55 @@ function create_card(map, index) {
                                 </div>
                             </div>
                             <div class="col-xxl-4 col-lg-12 col-4 ps-xxl-1 pe-xxl-2 px-lg-2 ps-1 pe-2 my-xxl-0 my-1">
+                                <div class="d-grid">
+                                    <button class="btn btn-outline-warning disabled">
+                                        Reload
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </card>`;
+}
+
+function create_card_keep(map, index) {
+    return `<card>
+                <div class="card mt-2 me-lg-0 me-2">
+                    <img src=${map.imageURL} onclick=open_in_new_tab("${map.imageURL}") class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">${map.seed}</h5>
+                        <small class="card-text">
+                            ${map.timeCreatedFormatted()}
+                        </small>
+                        <div class="row g-2 my-2">
+                            <div class="col-9">
+                                <div class="d-grid">
+                                    <a class="btn btn-primary" download=${map.getFullName()} href="${map.imageURL}">
+                                        <img alt="Bootstrap" src="assets/bootstrap-icons/download.svg"
+                                             width="16" height="16">
+                                        Save
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="d-grid">
+                                    <button onclick=delete_map_from_previous(${index}) class="btn btn-danger disabled">
+                                        <img src="assets/bootstrap-icons/trash.svg" alt="Bootstrap"
+                                             width="16" height="16">
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row g-2 mt-2">
+                            <div class="col-xxl-6 col-lg-12 col-6 my-xxl-0 my-1">
+                                <div class="d-grid">
+                                    <button onclick=copy_to_clipboard(${map.seed}) class="btn btn-outline-secondary">
+                                        Seed
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-xxl-6 col-lg-12 col-6 my-xxl-0 my-1">
                                 <div class="d-grid">
                                     <button class="btn btn-outline-warning disabled">
                                         Reload
