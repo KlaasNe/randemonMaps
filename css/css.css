@@ -1,0 +1,47 @@
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+    -moz-appearance: textfield;
+}
+
+/* width */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+    background-color: transparent;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background-color: transparent;
+    border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background-color: #505050;
+    border-radius: 10px;
+}
+
+@font-face {
+    font-family: FOTNewRodin;
+    src: url("../assets/fonts/FOTNewRodin Pro M.otf") format("opentype");
+}
+
+body {
+  font-family: 'FOTNewRodin', Fallback, sans-serif;
+}
+
+h5 {
+    font-size: 18px;
+}
+
+small {
+    font-size: 12px;
+}
