@@ -99,6 +99,7 @@ async function fetch_map(seed, chunkSize, nbChunksHorizontal, nbChunksVertical, 
         .catch(error => {
             hide_loading_spinner();
             window.alert(`Error fetching image\n${error}`);
+            previousMaps.splice(0, 1);
         });
 }
 
