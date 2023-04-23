@@ -117,6 +117,7 @@ function create_new_map() {
  * Enables buttons when done.
  */
 function set_latest_map() {
+    update_previous_maps();
     let seed = seedInput.value;
     if (!seed) seed = Math.floor(Math.random() * 10000000000000000);
     let chunkSize = document.getElementById("chunkSize").value;
@@ -134,7 +135,7 @@ function set_latest_map() {
         .then(mapURL => {
             if (mapURL) {
                 const map = new RandemonMap(mapURL, seed, chunkSize, nbChunksHorizontal, nbChunksVertical, maxBuildings, heightMap, island, themedTowns)
-                update_previous_maps(map);
+                previousMaps[0] = map;
                 latest.src = map.imageURL
                 latest.alt = "Latest generated randemon map";
                 downloadBtn.href = map.imageURL;
@@ -247,8 +248,8 @@ function clear_keep_maps() {
     keep.innerHTML = '';
 }
 
-function update_previous_maps(map) {
-    previousMaps.unshift(map);
+function update_previous_maps() {
+    previousMaps.unshift(null);
     if (previousMaps.length > MAX_MAPS + 1) previousMaps.pop();
     update_cards_previous_maps();
 }
