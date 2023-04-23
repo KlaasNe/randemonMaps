@@ -3,11 +3,25 @@ class RandemonMap {
     /**
      * @param{URL} imageURL
      * @param{number} seed
+     * @param{number} chunkSize
+     * @param{number} nbChunksHorizontal
+     * @param{number} nbChunksVertical
+     * @param{number} maxBuildings
+     * @param{boolean} heightMap
+     * @param{boolean} island
+     * @param{boolean} themedTowns
      */
-    constructor(imageURL, seed) {
+    constructor(imageURL, seed, chunkSize, nbChunksHorizontal, nbChunksVertical, maxBuildings, heightMap, island, themedTowns) {
         this.imageURL = imageURL;
-        this.seed = seed;
         this.timeCreated = new Date();
+        this.seed = seed;
+        this.chunkSize = chunkSize;
+        this.nbChunksHorizontal = nbChunksHorizontal;
+        this.nbChunksVertical = nbChunksVertical;
+        this.maxBuildings = maxBuildings;
+        this.heightMap = heightMap;
+        this.island = island;
+        this.themedTowns = themedTowns;
     }
 
     /**
@@ -30,10 +44,43 @@ const MAX_MAPS = 5;
 let previousMaps = [];
 let keepMaps = [];
 
+let downloadBtn;
+let keepBtn;
+let copySeedBtn;
+let openInNewTabBtn;
+let reloadBtn;
+let latest;
+let imageSpinner;
+
+let seedInput;
+let chunkSizeInput;
+let nbChunksHorizontalInput;
+let nbChunksVerticalInput;
+let maxBuildingsInput;
+let heightMapInput;
+let islandInput;
+let themedTownsInput;
+
 /**
  * Init first map when loading site.
  */
 addEventListener("DOMContentLoaded", () => {
+    downloadBtn = document.getElementById("downloadBtn");
+    keepBtn = document.getElementById("keepMap");
+    copySeedBtn = document.getElementById("copySeed");
+    openInNewTabBtn = document.getElementById("openInNewTab");
+    reloadBtn = document.getElementById("reload");
+    latest = document.getElementById("latest");
+    imageSpinner = document.getElementById("loading-img");
+
+    seedInput = document.getElementById("seed");
+    chunkSizeInput = document.getElementById("chunkSize");
+    nbChunksHorizontalInput = document.getElementById("nbChunksHorizontal");
+    nbChunksVerticalInput = document.getElementById("nbChunksVertical");
+    maxBuildingsInput = document.getElementById("maxBuildings");
+    heightMapInput = document.getElementById("heightMap");
+    islandInput = document.getElementById("islandMode");
+    themedTownsInput = document.getElementById("themedTowns");
     set_latest_map();
 });
 
@@ -42,16 +89,16 @@ addEventListener("DOMContentLoaded", () => {
  * Disables buttons to protect the user.
  * @returns {Promise<string>}
  */
-async function fetch_map(seed) {
+async function fetch_map(seed, chunkSize, nbChunksHorizontal, nbChunksVertical, heightMap, island, themedTowns, maxBuildings) {
     disable_buttons();
     let finalUrl = imageUrl;
-    finalUrl += "?seed=" + seed;
+    finalUrl += `?seed=${seed}&chunk_size=${chunkSize}&nb_chunks_horizontal=${nbChunksHorizontal}&nb_chunks_vertical=${nbChunksVertical}&height_map=${heightMap}&island=${island}&themed_towns=${themedTowns}&max_buildings=${maxBuildings}`
     return await fetch(finalUrl)
         .then(response => response.blob())
         .then(blob => URL.createObjectURL(blob))
-        .catch(ignored => {
+        .catch(error => {
             hide_loading_spinner();
-            window.alert('Error fetching image');
+            window.alert(`Error fetching image\n${error}`);
         });
 }
 
@@ -70,14 +117,23 @@ function create_new_map() {
  * Enables buttons when done.
  */
 function set_latest_map() {
-    const latest = document.getElementById("latest");
-    const downloadBtn = document.getElementById("downloadBtn");
-    let seed = document.getElementById("seed").value;
-    if (!seed) seed = Math.floor(Math.random() * 1000000000000000000);
-    fetch_map(seed)
+    let seed = seedInput.value;
+    if (!seed) seed = Math.floor(Math.random() * 10000000000000000);
+    let chunkSize = document.getElementById("chunkSize").value;
+    if (!chunkSize) chunkSize = 50;
+    let nbChunksHorizontal = document.getElementById("nbChunksHorizontal").value;
+    if (!nbChunksHorizontal) nbChunksHorizontal = 4;
+    let nbChunksVertical = document.getElementById("nbChunksVertical").value;
+    if (!nbChunksVertical) nbChunksVertical = 4;
+    let maxBuildings = document.getElementById("maxBuildings").value;
+    if (!maxBuildings) maxBuildings = 16;
+    let heightMap = document.getElementById("heightMap").checked;
+    let island = document.getElementById("islandMode").checked;
+    let themedTowns = document.getElementById("themedTowns").checked;
+    fetch_map(seed, chunkSize, nbChunksHorizontal, nbChunksVertical, heightMap, island, themedTowns, maxBuildings)
         .then(mapURL => {
             if (mapURL) {
-                const map = new RandemonMap(mapURL, seed)
+                const map = new RandemonMap(mapURL, seed, chunkSize, nbChunksHorizontal, nbChunksVertical, maxBuildings, heightMap, island, themedTowns)
                 update_previous_maps(map);
                 latest.src = map.imageURL
                 latest.alt = "Latest generated randemon map";
@@ -92,42 +148,30 @@ function set_latest_map() {
  * Disables buttons that need a map available.
  */
 function disable_buttons() {
-    const downloadBtn = document.getElementById("downloadBtn");
-    const keepBtn = document.getElementById("keepMap");
-    const copySeedBtn = document.getElementById("copySeed");
-    const openInNewTabBtn = document.getElementById("openInNewTab");
-    const reloadBtn = document.getElementById("reload");
-    const latest = document.getElementById("latest");
-    const loading = document.getElementById("loading-img");
     downloadBtn.classList.add("disabled");
     keepBtn.classList.add("disabled");
     openInNewTabBtn.classList.add("disabled");
+    reloadBtn.classList.add("disabled");
     copySeedBtn.classList.add("disabled");
     latest.hidden = true;
-    loading.hidden = false;
+    imageSpinner.hidden = false;
 }
 
 /**
  * Enables buttons that need a map available.
  */
 function enable_buttons() {
-    const downloadBtn = document.getElementById("downloadBtn");
-    const keepBtn = document.getElementById("keepMap");
-    const copySeedBtn = document.getElementById("copySeed");
-    const openInNewTabBtn = document.getElementById("openInNewTab");
-    const reloadBtn = document.getElementById("reload");
-    const latest = document.getElementById("latest");
     downloadBtn.classList.remove("disabled");
     keepBtn.classList.remove("disabled");
     openInNewTabBtn.classList.remove("disabled");
+    reloadBtn.classList.remove("disabled");
     copySeedBtn.classList.remove("disabled");
     latest.hidden = false;
     hide_loading_spinner();
 }
 
 function hide_loading_spinner() {
-    const loading = document.getElementById("loading-img");
-    loading.hidden = true;
+    imageSpinner.hidden = true;
 }
 
 /**
@@ -145,6 +189,10 @@ function copy_to_clipboard(text) {
 function copy_seed_to_clipboard() {
     const seed = previousMaps[0].seed.toString();
     copy_to_clipboard(seed);
+}
+
+function clear_seed_input() {
+    seedInput.value = '';
 }
 
 function delete_map_from_previous(index) {
@@ -205,6 +253,27 @@ function update_previous_maps(map) {
     update_cards_previous_maps();
 }
 
+function reload_map(index) {
+    const map = previousMaps[index];
+    restore_settings(map);
+}
+
+function reload_map_keep(index) {
+    const map = keepMaps[index];
+    restore_settings(map);
+}
+
+function restore_settings(map) {
+    seedInput.value = map.seed;
+    chunkSizeInput.value = map.chunkSize;
+    heightMapInput.checked = map.heightMap;
+    islandInput.checked = map.island;
+    themedTownsInput.checked = map.themedTowns;
+    maxBuildingsInput.value = map.maxBuildings;
+    nbChunksHorizontalInput.value = map.nbChunksHorizontal;
+    nbChunksVerticalInput.value = map.nbChunksVertical;
+}
+
 function create_card(map, index) {
     return `<card>
                 <div class="card mt-2 me-lg-0 me-2">
@@ -252,8 +321,8 @@ function create_card(map, index) {
                             </div>
                             <div class="col-xxl-4 col-lg-12 col-4 ps-xxl-1 pe-xxl-2 px-lg-2 ps-1 pe-2 my-xxl-0 my-1">
                                 <div class="d-grid">
-                                    <button class="btn btn-outline-warning disabled">
-                                        Reload
+                                    <button onclick="reload_map(${index})" class="btn btn-outline-warning">
+                                        Restore
                                     </button>
                                 </div>
                             </div>
@@ -301,8 +370,8 @@ function create_card_keep(map, index) {
                             </div>
                             <div class="col-xxl-6 col-lg-12 col-6 my-xxl-0 my-1">
                                 <div class="d-grid">
-                                    <button class="btn btn-outline-warning disabled">
-                                        Reload
+                                    <button onclick="reload_map_keep(${index})" class="btn btn-outline-warning">
+                                        Restore
                                     </button>
                                 </div>
                             </div>

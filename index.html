@@ -17,11 +17,12 @@
                     class="text-light"><strong>emon</strong></span></h1>
         </div>
 
-        <!--main image-->
         <div class="row">
             <div class="col-12 col-lg-8 pe-lg-2 mb-4 mb-lg-0">
-                <div class="mb-3">
-                    <img onclick=open_in_new_tab() class="img-fluid mb-2" alt="Latest generated randemon map"
+
+                <!--main image-->
+                <div class="mb-4">
+                    <img onclick="open_in_new_tab()" class="img-fluid mb-2" alt="Latest generated randemon map"
                          id="latest"/>
                     <div class="d-flex justify-content-center">
                         <div class="spinner-border mb-2" id="loading-img" role="status">
@@ -39,7 +40,7 @@
                         <div class="d-flex flex-nowrap p-0">
                             <div class="col-3 pe-1">
                                 <div class="d-grid" style="height:100%">
-                                    <button onclick=keep_latest_map() class="btn btn-outline-primary" id="keepMap">
+                                    <button onclick="keep_latest_map()" class="btn btn-outline-primary" id="keepMap">
                                         <!--                                <img src="assets/bootstrap-icons/plus-square.svg" style="color: white;" alt="Bootstrap"-->
                                         <!--                                     width="12" height="12">-->
                                         Keep
@@ -48,7 +49,7 @@
                             </div>
                             <div class="col-3 px-1">
                                 <div class="d-grid" style="height:100%">
-                                    <button onclick=copy_seed_to_clipboard() class="btn btn-outline-secondary"
+                                    <button onclick="copy_seed_to_clipboard()" class="btn btn-outline-secondary"
                                             id="copySeed">
                                         Copy seed
                                     </button>
@@ -56,7 +57,7 @@
                             </div>
                             <div class="col-3 px-1">
                                 <div class="d-grid" style="height:100%">
-                                    <button onclick=open_in_new_tab() class="btn btn-outline-secondary"
+                                    <button onclick="open_in_new_tab()" class="btn btn-outline-secondary"
                                             id="openInNewTab">
                                         Open in new tab
                                     </button>
@@ -64,35 +65,91 @@
                             </div>
                             <div class="col-3 ps-1">
                                 <div class="d-grid" style="height:100%">
-                                    <button class="btn btn-outline-warning disabled" id="reload">
-                                        Reload
+                                    <button onclick="reload_map(0)" class="btn btn-outline-warning" id="reload">
+                                        Restore settings
                                     </button>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="pt-3 border-top">
+                <!--main image-->
+
+                <!--user input-->
+                <div class="pt-4 border-top">
                     <div class="inputs">
-                        <div class="mb-3">
-                            <label for="seed" class="form-label">Seed</label>
-                            <input type="number" class="form-control text-body bg-body" id="seed" min="0"
-                                   max="9223372036854775807"
-                                   aria-describedby="The seed used for randomization" autocomplete="false">
-                        </div>
-                        <div class="mb-3 form-check">
-                            <input type="checkbox" class="form-check-input" id="islandMode" checked disabled>
-                            <label class="form-check-label text-body" for="islandMode">Island</label>
+                        <div class="row g-2 mb-3">
+                            <div class="col-8">
+                                <label for="seed" class="form-label">Seed</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control text-body bg-body" id="seed" min="0"
+                                           max="9223372036854775807"
+                                           aria-describedby="The seed used for randomization" autocomplete="false">
+                                    <button onclick="clear_seed_input()" class="btn btn-outline-secondary">clear</button>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <label for="chunkSize" class="form-label">Chunk size</label>
+                                <input type="number" class="form-control text-body bg-body" id="chunkSize" value="50"
+                                       min="1"
+                                       aria-describedby="The number of tiles a side of a chunk consists of"
+                                       autocomplete="false">
+                            </div>
+                            <div class="col-4">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="heightMap">
+                                    <label class="form-check-label text-body" for="heightMap">Render height map
+                                        only</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="islandMode" checked>
+                                    <label class="form-check-label text-body" for="islandMode">Island</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="themedTowns" checked>
+                                    <label class="form-check-label text-body" for="themedTowns">Themed towns</label>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <label for="maxBuildings" class="form-label">Max buildings</label>
+                                <input type="number" class="form-control text-body bg-body" id="maxBuildings" value="16"
+                                       min=0
+                                       aria-describedby="The maximal amount of buildings in a single chunk"
+                                       autocomplete="false">
+                            </div>
+                            <div class="col-4">
+                                <div class="row g-2">
+                                    <div class="col-lg-6 col-12">
+                                        <label for="nbChunksHorizontal" class="form-label">#Horizontal</label>
+                                        <input type="number" class="form-control text-body bg-body"
+                                               id="nbChunksHorizontal"
+                                               value="4" min=1
+                                               aria-describedby="The number of chunks horizontally the map should consist of"
+                                               autocomplete="false">
+                                    </div>
+                                    <div class="col-lg-6 col-12">
+                                        <label for="nbChunksVertical" class="form-label">#Vertical</label>
+                                        <input type="number" class="form-control text-body bg-body"
+                                               id="nbChunksVertical"
+                                               value="4" min=1
+                                               aria-describedby="The number of chunks vertically the map should consist of"
+                                               autocomplete="false">
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
+
                     <div class="d-grid">
-                        <button onclick=create_new_map() class="btn btn-primary">
+                        <button onclick="create_new_map()" class="btn btn-primary">
                             <img src="assets/bootstrap-icons/terminal.svg" alt="Bootstrap"
                                  width="16" height="16">
                             Generate
                         </button>
                     </div>
                 </div>
+                <!--user input-->
+
             </div>
 
             <!--Column with last 5 generated images-->
