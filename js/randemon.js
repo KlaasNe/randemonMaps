@@ -39,7 +39,7 @@ class RandemonMap {
 }
 
 
-const imageUrl = "http://127.0.0.1:8000";
+const imageUrl = "https://randemon.azurewebsites.net/";
 const MAX_MAPS = 5;
 let previousMaps = [];
 let keepMaps = [];
@@ -99,6 +99,7 @@ async function fetch_map(seed, chunkSize, nbChunksHorizontal, nbChunksVertical, 
         .catch(error => {
             hide_loading_spinner();
             window.alert(`Error fetching image\n${error}`);
+            previousMaps.splice(0, 1);
         });
 }
 
