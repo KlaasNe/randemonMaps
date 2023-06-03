@@ -37,9 +37,9 @@
                                 Save
                             </a>
                         </div>
-                        <div class="d-flex flex-nowrap p-0">
-                            <div class="col-3 pe-1">
-                                <div class="d-grid" style="height:100%">
+                        <div class="row g-2">
+                            <div class="col-6 col-sm-3">
+                                <div class="d-grid h-100">
                                     <button onclick="keep_latest_map()" class="btn btn-outline-primary" id="keepMap">
                                         <!--                                <img src="assets/bootstrap-icons/plus-square.svg" style="color: white;" alt="Bootstrap"-->
                                         <!--                                     width="12" height="12">-->
@@ -47,24 +47,24 @@
                                     </button>
                                 </div>
                             </div>
-                            <div class="col-3 px-1">
-                                <div class="d-grid" style="height:100%">
+                            <div class="col-6 col-sm-3">
+                                <div class="d-grid h-100">
                                     <button onclick="copy_seed_to_clipboard()" class="btn btn-outline-secondary"
                                             id="copySeed">
                                         Copy seed
                                     </button>
                                 </div>
                             </div>
-                            <div class="col-3 px-1">
-                                <div class="d-grid" style="height:100%">
+                            <div class="col-6 col-sm-3">
+                                <div class="d-grid h-100">
                                     <button onclick="open_in_new_tab()" class="btn btn-outline-secondary"
                                             id="openInNewTab">
                                         Open in new tab
                                     </button>
                                 </div>
                             </div>
-                            <div class="col-3 ps-1">
-                                <div class="d-grid" style="height:100%">
+                            <div class="col-6 col-sm-3">
+                                <div class="d-grid h-100">
                                     <button onclick="reload_map(0)" class="btn btn-outline-warning" id="reload">
                                         Restore settings
                                     </button>
@@ -162,12 +162,15 @@
                                  id="previous-maps"></div>
                         </div>
                     </div>
-
-                    <button class="btn btn-link" data-bs-toggle="offcanvas"
-                            data-bs-target="#offcanvas-keep" aria-controls="offcanvas-keep">
-                        My collection
-                    </button>
                 </div>
+            </div>
+
+            <div class="position-relative">
+                <button class="btn btn-secondary rounded-circle border border-light position-fixed translate-middle" data-bs-toggle="offcanvas"
+                        data-bs-target="#offcanvas-keep" aria-controls="offcanvas-keep" style="width: 48px; height: 48px; bottom: 24px; right: 24px;">
+                    <img src="assets/bootstrap-icons/list.svg" alt="Bootstrap"
+                         width="24" height="24">
+                </button>
             </div>
 
             <!--offcanvas-->

@@ -278,10 +278,9 @@ function restore_settings(map) {
 
 function create_card(map, index) {
     return `<card>
-                <div class="card mt-2 me-lg-0 me-2">
+                <div class="card mt-2 me-lg-0 me-2" style="width: min(90vw, 330px);">
                     <img src=${map.imageURL} onclick=open_in_new_tab("${map.imageURL}") class="card-img-top" alt="...">
                     <div class="card-body">
-                        <h5 class="card-title">${map.seed}</h5>
                         <small class="card-text">
                             ${map.timeCreatedFormatted()}
                         </small>
@@ -329,6 +328,9 @@ function create_card(map, index) {
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <div class="card-footer">
+                      <small class="text-body-secondary text-break">Seed: ${map.seed}</small>
                     </div>
                 </div>
             </card>`;
