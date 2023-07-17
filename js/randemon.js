@@ -98,8 +98,8 @@ async function fetch_map(seed, chunkSize, nbChunksHorizontal, nbChunksVertical, 
         .then(blob => URL.createObjectURL(blob))
         .catch(error => {
             hide_loading_spinner();
-            window.alert(`Error fetching image\n${error}`);
             previousMaps.splice(0, 1);
+            window.alert(`Error fetching image\n${error}\n\nPlease DO NOT refresh while image is loading.`);
         });
 }
 
@@ -143,7 +143,10 @@ function set_latest_map() {
                 downloadBtn.download = map.timeCreatedFormatted() + '_' + seed.toString();
                 enable_buttons();
             }
-        });
+        }).catch(error => {
+            previousMaps.splice(0, 1);
+            window.alert(error);
+    });
 }
 
 /**
@@ -250,7 +253,7 @@ function clear_keep_maps() {
 }
 
 function update_previous_maps() {
-    previousMaps.unshift(null);
+    if (previousMaps[0] != null) previousMaps.unshift(null);
     if (previousMaps.length > MAX_MAPS + 1) previousMaps.pop();
     update_cards_previous_maps();
 }
@@ -278,10 +281,9 @@ function restore_settings(map) {
 
 function create_card(map, index) {
     return `<card>
-                <div class="card mt-2 me-lg-0 me-2">
+                <div class="card mt-2 me-lg-0 me-2" style="width: min(90vw, 400px);">
                     <img src=${map.imageURL} onclick=open_in_new_tab("${map.imageURL}") class="card-img-top" alt="...">
                     <div class="card-body">
-                        <h5 class="card-title">${map.seed}</h5>
                         <small class="card-text">
                             ${map.timeCreatedFormatted()}
                         </small>
@@ -329,6 +331,9 @@ function create_card(map, index) {
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <div class="card-footer">
+                      <small class="text-body-secondary text-break">Seed: ${map.seed}</small>
                     </div>
                 </div>
             </card>`;
