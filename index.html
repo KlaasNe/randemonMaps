@@ -76,65 +76,97 @@
                 <!--main image-->
 
                 <!--user input-->
-                <div class="pt-4 border-top">
+                <div class="pt-3 border-top">
                     <div class="inputs">
-                        <div class="row g-2 mb-3">
-                            <div class="col-8">
+                        <div class="row mb-3">
+                            <div class="col-md-8 col-12">
                                 <label for="seed" class="form-label">Seed</label>
-                                <div class="input-group">
+                                <div class="input-group mb-2">
                                     <input type="number" class="form-control text-body bg-body" id="seed" min="0"
                                            max="9223372036854775807"
                                            aria-describedby="The seed used for randomization" autocomplete="false">
                                     <button onclick="clear_seed_input()" class="btn btn-outline-secondary">clear</button>
                                 </div>
-                            </div>
-                            <div class="col-4">
-                                <label for="chunkSize" class="form-label">Chunk size</label>
-                                <input type="number" class="form-control text-body bg-body" id="chunkSize" value="50"
-                                       min="1"
-                                       aria-describedby="The number of tiles a side of a chunk consists of"
-                                       autocomplete="false">
-                            </div>
-                            <div class="col-4">
-                                <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" id="heightMap">
-                                    <label class="form-check-label text-body" for="heightMap">Render height map
-                                        only</label>
-                                </div>
-                                <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" id="islandMode" checked>
-                                    <label class="form-check-label text-body" for="islandMode">Island</label>
-                                </div>
-                                <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" id="themedTowns" checked>
-                                    <label class="form-check-label text-body" for="themedTowns">Themed towns</label>
-                                </div>
-                            </div>
-                            <div class="col-4">
-                                <label for="maxBuildings" class="form-label">Max buildings</label>
-                                <input type="number" class="form-control text-body bg-body" id="maxBuildings" value="16"
-                                       min=0
-                                       aria-describedby="The maximal amount of buildings in a single chunk"
-                                       autocomplete="false">
-                            </div>
-                            <div class="col-4">
-                                <div class="row g-2">
-                                    <div class="col-lg-6 col-12">
-                                        <label for="nbChunksHorizontal" class="form-label">#Horizontal</label>
-                                        <input type="number" class="form-control text-body bg-body"
-                                               id="nbChunksHorizontal"
-                                               value="4" min=1
-                                               aria-describedby="The number of chunks horizontally the map should consist of"
+                                <div class="row mb-2">
+                                    <div class="col-6">
+                                        <div class="form-check">
+                                            <input type="checkbox" class="form-check-input bg-body" id="heightMap">
+                                            <label class="form-check-label text-body" for="heightMap">Render height map
+                                                only</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input type="checkbox" class="form-check-input bg-body" id="islandMode" checked>
+                                            <label class="form-check-label text-body" for="islandMode">Island</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input type="checkbox" class="form-check-input bg-body" id="themedTowns" checked>
+                                            <label class="form-check-label text-body" for="themedTowns">Themed towns</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <label for="maxBuildings" class="form-label">Max buildings</label>
+                                        <input type="number" class="form-control text-body bg-body" id="maxBuildings" value="16"
+                                               min=0
+                                               aria-describedby="The maximal amount of buildings in a single chunk"
                                                autocomplete="false">
                                     </div>
-                                    <div class="col-lg-6 col-12">
-                                        <label for="nbChunksVertical" class="form-label">#Vertical</label>
-                                        <input type="number" class="form-control text-body bg-body"
-                                               id="nbChunksVertical"
-                                               value="4" min=1
-                                               aria-describedby="The number of chunks vertically the map should consist of"
-                                               autocomplete="false">
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-12 mb-2">
+                                <div class="p-2 border rounded">
+                                    <label for="chunkSize" class="form-label">Chunk size</label>
+                                    <input type="number" class="form-control text-body bg-body" id="chunkSize" value="50"
+                                           min="1" max="256"
+                                           aria-describedby="The number of tiles a side of a chunk consists of"
+                                           autocomplete="false">
+                                    <div class="col-12">
+                                        <div class="row g-2">
+                                            <div class="col-lg-6 col-12">
+                                                <label for="nbChunksHorizontal" class="form-label">#Horizontal</label>
+                                                <input type="number" class="form-control text-body bg-body"
+                                                       id="nbChunksHorizontal"
+                                                       value="4" min=1
+                                                       aria-describedby="The number of chunks horizontally the map should consist of"
+                                                       autocomplete="false">
+                                            </div>
+                                            <div class="col-lg-6 col-12">
+                                                <label for="nbChunksVertical" class="form-label">#Vertical</label>
+                                                <input type="number" class="form-control text-body bg-body"
+                                                       id="nbChunksVertical"
+                                                       value="4" min=1
+                                                       aria-describedby="The number of chunks vertically the map should consist of"
+                                                       autocomplete="false">
+                                            </div>
+                                        </div>
                                     </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-12">
+                                <div class="border rounded p-2">
+                                    <div class="form-check form-switch pb-2 mb-1 border-bottom" onchange="update_townmap_availability()">
+                                        <input type="checkbox" role="switch" class="form-check-input bg-body" id="townMap">
+                                        <label class="form-check-label" for="townMap">Town map overlay</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" class="form-check-input bg-body" id="topLeft" name="townMap" value="TOPLEFT" checked disabled>
+                                        <label class="form-check-label" for="topLeft">Top left</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" class="form-check-input bg-body" id="topRight" name="townMap" value="TOPRIGHT" disabled>
+                                        <label class="form-check-label" for="topRight">Top right</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" class="form-check-input bg-body" id="bottomLeft" name="townMap" value="BOTTOMLEFT" disabled>
+                                        <label class="form-check-label" for="bottomLeft">Bottom left</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" class="form-check-input bg-body" id="bottomRight" name="townMap" value="BOTTOMRIGHT" disabled>
+                                        <label class="form-check-label" for="bottomRight">Bottom right</label>
+                                    </div>
+                                    <label for="scaleSlider">Scale:
+                                        <span id="scale">x8</span>
+                                    </label>
+                                    <input type="range" class="form-range bg-body" id="scaleSlider" min="0" value="3" max="5" step="1" oninput="update_scale_value(value)" disabled/>
                                 </div>
                             </div>
                         </div>
