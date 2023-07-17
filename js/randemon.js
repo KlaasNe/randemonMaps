@@ -40,6 +40,7 @@ class RandemonMap {
 
 
 const imageUrl = "https://randemon.azurewebsites.net/";
+// const imageUrl = "http://localhost:8000"
 const MAX_MAPS = 5;
 let previousMaps = [];
 let keepMaps = [];
@@ -89,10 +90,10 @@ addEventListener("DOMContentLoaded", () => {
  * Disables buttons to protect the user.
  * @returns {Promise<string>}
  */
-async function fetch_map(seed, chunkSize, nbChunksHorizontal, nbChunksVertical, heightMap, island, themedTowns, maxBuildings) {
+async function fetch_map(seed, chunkSize, nbChunksHorizontal, nbChunksVertical, heightMap, island, themedTowns, maxBuildings, townMap, scale) {
     disable_buttons();
     let finalUrl = imageUrl;
-    finalUrl += `?seed=${seed}&chunk_size=${chunkSize}&nb_chunks_horizontal=${nbChunksHorizontal}&nb_chunks_vertical=${nbChunksVertical}&height_map=${heightMap}&island=${island}&themed_towns=${themedTowns}&max_buildings=${maxBuildings}`
+    finalUrl += `?seed=${seed}&chunk_size=${chunkSize}&nb_chunks_horizontal=${nbChunksHorizontal}&nb_chunks_vertical=${nbChunksVertical}&height_map=${heightMap}&island=${island}&themed_towns=${themedTowns}&max_buildings=${maxBuildings}&town_map=${townMap}&scale=${scale}`
     return await fetch(finalUrl)
         .then(response => response.blob())
         .then(blob => URL.createObjectURL(blob))
@@ -132,7 +133,14 @@ function set_latest_map() {
     let heightMap = document.getElementById("heightMap").checked;
     let island = document.getElementById("islandMode").checked;
     let themedTowns = document.getElementById("themedTowns").checked;
-    fetch_map(seed, chunkSize, nbChunksHorizontal, nbChunksVertical, heightMap, island, themedTowns, maxBuildings)
+    let townMap = null;
+    let scale = 8;
+    if (document.getElementById("townMap").checked) {
+        townMap = document.querySelector("input[name='townMap']:checked").value;
+        scale = 2 ** document.getElementById("scaleSlider").value;
+    }
+
+    fetch_map(seed, chunkSize, nbChunksHorizontal, nbChunksVertical, heightMap, island, themedTowns, maxBuildings, townMap, scale)
         .then(mapURL => {
             if (mapURL) {
                 const map = new RandemonMap(mapURL, seed, chunkSize, nbChunksHorizontal, nbChunksVertical, maxBuildings, heightMap, island, themedTowns)
@@ -277,6 +285,26 @@ function restore_settings(map) {
     maxBuildingsInput.value = map.maxBuildings;
     nbChunksHorizontalInput.value = map.nbChunksHorizontal;
     nbChunksVerticalInput.value = map.nbChunksVertical;
+}
+
+function update_scale_value(scale) {
+    document.getElementById("scale").innerText = 'x' + 2**scale;
+}
+
+function update_townmap_availability() {
+    if (document.getElementById("townMap").checked) {
+        document.getElementById("topLeft").disabled = false;
+        document.getElementById("topRight").disabled = false;
+        document.getElementById("bottomLeft").disabled = false;
+        document.getElementById("bottomRight").disabled = false;
+        document.getElementById("scaleSlider").disabled = false;
+    } else {
+        document.getElementById("topLeft").disabled = true;
+        document.getElementById("topRight").disabled = true;
+        document.getElementById("bottomLeft").disabled = true;
+        document.getElementById("bottomRight").disabled = true;
+        document.getElementById("scaleSlider").disabled = true;
+    }
 }
 
 function create_card(map, index) {
